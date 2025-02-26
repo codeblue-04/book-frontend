@@ -1,0 +1,151 @@
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 24px;
+    background-color: #f3f4f6;
+    min-height: 100vh;
+  }
+  
+  h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 24px;
+    text-align: center;
+    color: #1e40af;
+  }
+  
+  .table-container {
+    overflow-x: auto;
+    background-color: white;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding: 16px;
+  }
+  
+  table {
+    width: 100%;
+    text-align: left;
+    border-collapse: collapse;
+  }
+  
+  thead tr {
+    background-color: #3b82f6;
+    color: white;
+  }
+  
+  th, td {
+    padding: 12px;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  tbody tr:hover {
+    background-color: #e5e7eb;
+    transition: background-color 0.3s ease;
+  }
+  
+  .image-container {
+    text-align: center;
+  }
+  
+  .image-container img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 8px;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+  }
+  
+  .input-field {
+    border: 1px solid #d1d5db;
+    padding: 6px;
+    width: 100%;
+    border-radius: 4px;
+  }
+  
+  .action-buttons {
+    display: flex;
+    justify-content: space-between; 
+    width: 90%;
+    ;
+}
+
+.button {
+    flex: 1; 
+    margin: 0 4px; 
+    padding: 40px; 
+    border-radius: 8px;
+    
+    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+  
+  .button.edit {
+    background-color: #3b82f6;
+    color: white;
+  }
+  
+  .button.edit:hover {
+    background-color: #2563eb;
+  }
+  
+  .button.delete {
+    background-color: #ef4444;
+    color: white;
+  }
+  
+  .button.delete:hover {
+    background-color: #dc2626;
+  }
+  
+  .button.confirm {
+    background-color: #10b981;
+    color: white;
+  }
+  
+  .button.confirm:hover {
+    background-color: #059669;
+  }
+  
+  .modal {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.5);
+  }
+  
+  .modal-content {
+    background-color: white;
+    padding: 24px;
+    border-radius: 8px;
+    text-align: center;
+  }
+  
+  .modal-buttons {
+    margin-top: 16px;
+    display: flex;
+    justify-content: center;
+ 
+  }
+  .button.create {
+    background-color: #10b981;
+    color: white;
+    width: 100%;
+    margin-top: 16px;
+    text-align: center;
+  }
+  
+  .button.create:hover {
+    background-color: #059669;
+  }
+  
+  .modal input {
+    display: block;
+    width: 100%;
+    margin: 5px 0;
+    padding: 5px;
+  }
+  
+  
