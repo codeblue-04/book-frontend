@@ -1,5 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS, cross_origin
+from pymongo import MongoClient
 
 # Sample data (in-memory database for simplicity)
 books = [
@@ -11,7 +12,13 @@ books = [
 
 app = Flask(__name__)
 CORS(app)
-app.config['CORS_HEADERS']='Content-Type'
+
+# Connect to MongoDB
+MONGO_URI = "mongodb+srv://tomatigurl:<db_password>@cluster0.6waql.mongodb.net/"
+client = MongoClient(MONGO_URI)
+db = client["bookstore"]
+collection = db["books"]
+
 
 @app.route("/")
 def hello_world():
@@ -23,47 +30,51 @@ def create_book():
     data = request.get_json()
 
     new_book = {
-        "id": len(books) + 1,
         "title": data["title"],
         "author": data["author"],
         "image_url": data["image_url"]
     }
 
-    books.append(new_book)
+    result = collection.insert_one(new_book)
+    new_book["_id"] = str(result.inserted_id)
     return jsonify(new_book), 201
 
 # Read (GET) operation - Get all books
 @app.route('/books', methods=['GET'])
-@cross_origin()
+@app.route('/books', methods=['GET'])
 def get_all_books():
+    books = list(collection.find({}, {"_id": 0}))  # Exclude MongoDB ObjectId
     return jsonify({"books": books})
 
 # Read (GET) operation - Get a specific book by ID
-@app.route('/books/<int:book_id>', methods=['GET'])
-def get_book(book_id):
-    book = next((b for b in books if b["id"] == book_id), None)
+@app.route('/books/<string:title>', methods=['GET'])
+def get_book(title):
+    book = collection.find_one({"title": title}, {"_id": 0})  # Exclude ObjectId
     if book:
         return jsonify(book)
     else:
         return jsonify({"error": "Book not found"}), 404
 
 # Update (PUT) operation
-@app.route('/books/<int:book_id>', methods=['PUT'])
-def update_book(book_id):
-    book = next((b for b in books if b["id"] == book_id), None)
-    if book:
-        data = request.get_json()
-        book.update(data)
-        return jsonify(book)
+@app.route('/books/<string:title>', methods=['PUT'])
+def update_book(title):
+    data = request.get_json()
+    result = collection.update_one({"title": title}, {"$set": data})
+    if result.modified_count > 0:
+        return jsonify({"message": "Book updated successfully"})
     else:
         return jsonify({"error": "Book not found"}), 404
+
     
 # Delete operation
-@app.route('/books/<int:book_id>', methods=['DELETE'])
-def delete_book(book_id):
-    global books
-    books = [b for b in books if b["id"] != book_id]
-    return jsonify({"message": "Book deleted successfully"})
+@app.route('/books/<string:title>', methods=['DELETE'])
+def delete_book(title):
+    result = collection.delete_one({"title": title})
+    if result.deleted_count > 0:
+        return jsonify({"message": "Book deleted successfully"})
+    else:
+        return jsonify({"error": "Book not found"}), 404
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5001, debug=True)
