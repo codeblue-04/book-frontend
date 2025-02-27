@@ -53,16 +53,25 @@ const App = () => {
   
 
   const handleCreateBook = async () => {
-    if (!newBook.title || !newBook.author || !newBook.image_url) return;
+    if (!newBook.title || !newBook.author || !newBook.image_url) {
+      console.error("Missing required fields:", newBook);
+      return;
+    }
+  
     try {
+      console.log("Creating book with:", newBook);  
       const response = await axios.post(uri, newBook);
-      setBooks([...books, response.data]);
+      console.log("Response from API:", response.data);  
+  
+      await fetchBooks();  // โหลดข้อมูลใหม่จากเซิร์ฟเวอร์
       setNewBook({ title: "", author: "", image_url: "" });
       setShowCreateForm(false);
     } catch (error) {
       console.error("Error creating book:", error);
     }
   };
+  
+  
 
   const handleEditBook = (book) => {
     setEditBook({ ...book });
@@ -82,6 +91,7 @@ const App = () => {
   return (
     <div className="container">
       <h1>Book List</h1>
+      <h2>  !!!!! กด Create แล้วต้อง รีเฟรช นะคะ หนูแก้ไม่เป็นว่ากดแล้วต้องโชว์เลยยังไง </h2>
       <div className="table-container">
         <table>
           <thead>
@@ -139,6 +149,7 @@ const App = () => {
                 <td className="p-3 action-buttons">
                   {editBook && editBook.id === book.id ? (
                     <button onClick={() => handleUpdateBook()} className="button confirm">
+
                       <Check size={18} />
                     </button>
                   ) : (
