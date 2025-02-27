@@ -14,7 +14,7 @@ app = Flask(__name__)
 CORS(app)
 
 # Connect to MongoDB
-MONGO_URI = "mongodb+srv://tomatigurl:<db_password>@cluster0.6waql.mongodb.net/"
+MONGO_URI = "mongodb+srv://tomatigurl:<db_password>@cluster0.6waql.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 client = MongoClient(MONGO_URI)
 db = client["bookstore"]
 collection = db["books"]
@@ -40,7 +40,7 @@ def create_book():
     return jsonify(new_book), 201
 
 # Read (GET) operation - Get all books
-@app.route('/books', methods=['GET'])
+
 @app.route('/books', methods=['GET'])
 def get_all_books():
     books = list(collection.find({}, {"_id": 0}))  # Exclude MongoDB ObjectId

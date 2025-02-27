@@ -23,15 +23,34 @@ const App = () => {
       console.error("Error fetching books:", error);
     }
   };
+  const handleUpdateBook = async () => {
+    if (!editBook || !editBook.title || !editBook.author || !editBook.image_url) {
+      console.error("Missing required fields:", editBook);
+      return;
+    }
+  
+    try {
+      console.log("Updating book:", editBook);
+      const response = await axios.put(`${uri}/${editBook.id}`, editBook);
+      setBooks(books.map((book) => (book.id === editBook.id ? response.data : book)));
+      setEditBook(null);
+    } catch (error) {
+      console.error("Error updating book:", error);
+    }
+  };
+  
 
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     if (editBook) {
-      setEditBook({ ...editBook, [name]: value });
+      const updatedBook = { ...editBook, [name]: value };
+      console.log("Editing book:", updatedBook);  // ตรวจสอบค่าที่แก้ไข
+      setEditBook(updatedBook);
     } else {
       setNewBook({ ...newBook, [name]: value });
     }
   };
+  
 
   const handleCreateBook = async () => {
     if (!newBook.title || !newBook.author || !newBook.image_url) return;
@@ -49,16 +68,6 @@ const App = () => {
     setEditBook({ ...book });
   };
 
-  const handleUpdateBook = async () => {
-    if (!editBook || !editBook.title || !editBook.author || !editBook.image_url) return;
-    try {
-      const response = await axios.put(`${uri}/${editBook.id}`, editBook);
-      setBooks(books.map((book) => (book.id === editBook.id ? response.data : book)));
-      setEditBook(null);
-    } catch (error) {
-      console.error("Error updating book:", error);
-    }
-  };
 
   const handleDeleteBook = async () => {
     try {
@@ -129,7 +138,7 @@ const App = () => {
                 </td>
                 <td className="p-3 action-buttons">
                   {editBook && editBook.id === book.id ? (
-                    <button onClick={handleUpdateBook} className="button confirm">
+                    <button onClick={() => handleUpdateBook()} className="button confirm">
                       <Check size={18} />
                     </button>
                   ) : (
